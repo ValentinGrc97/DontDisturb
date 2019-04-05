@@ -1,4 +1,4 @@
-package com.oostaoo.org.dontdisturb
+package com.oostaoo.org.leaveme
 
 import org.junit.Test
 

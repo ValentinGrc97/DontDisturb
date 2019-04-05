@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Don\'t Disturb</string>
+    <string name="app_name">Leave Me</string>
 
     <string name="no_accelerometer">No accelerometer present!</string>
     <string name="do_not_disturb">Mode ne pas déranger</string>

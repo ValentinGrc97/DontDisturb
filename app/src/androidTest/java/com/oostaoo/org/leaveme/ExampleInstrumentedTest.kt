@@ -1,4 +1,4 @@
-package com.oostaoo.org.dontdisturb
+package com.oostaoo.org.leaveme
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.oostaoo.org.dontdisturb", appContext.packageName)
+        assertEquals("com.oostaoo.org.leaveme", appContext.packageName)
     }
 }
