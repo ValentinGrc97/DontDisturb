@@ -19,11 +19,13 @@ class MainActivity : AppCompatActivity() {
     private var accelerometerSensor: Sensor? = null
     private var accelerometerPresent: Boolean = false
     private var needSetModeNotDisturb: Boolean = false
-    private var isAppActivate: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val prefs = getSharedPreferences("preference", 0)
+        val editor = prefs.edit()
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         val sensorList = sensorManager!!.getSensorList(Sensor.TYPE_ACCELEROMETER)
@@ -34,13 +36,29 @@ class MainActivity : AppCompatActivity() {
             accelerometerPresent = false
         }
 
+        if(prefs.getBoolean("isAppActivate", false)) {
+            toggleButton.isChecked = true
+            toggleButton.setBackgroundColor(resources.getColor(R.color.green))
+        }
+        else {
+            toggleButton.isChecked = false
+            toggleButton.setBackgroundColor(resources.getColor(R.color.red))
+        }
+
         toggleButton.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked) {
-                isAppActivate = true
+                val mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                if (!mNotificationManager.isNotificationPolicyAccessGranted) {
+                    val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
+                    startActivity(intent)
+                }
+                editor.putBoolean("isAppActivate", true)
+                editor.apply()
                 toggleButton.setBackgroundColor(resources.getColor(R.color.green))
             }
             else {
-                isAppActivate = false
+                editor.putBoolean("isAppActivate", false)
+                editor.apply()
                 toggleButton.setBackgroundColor(resources.getColor(R.color.red))
                 needSetModeNotDisturb = false
                 setNotificationMode()
@@ -62,8 +80,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onSensorChanged(arg0:SensorEvent) {
+
+            val prefs = getSharedPreferences("preference", 0)
             val zValue = arg0.values[2]
-            if(isAppActivate) {
+            if(prefs.getBoolean("isAppActivate", false)) {
                 if (zValue >= -8) {
                     if (needSetModeNotDisturb) {
                         needSetModeNotDisturb = false
